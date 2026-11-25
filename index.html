@@ -1,0 +1,126 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Calm: set up your PC as the AI</title>
+<style>
+:root{--paper:#ebe8e1;--ink:#141414;--dim:#5d5a54;--line:#bdb9af;--card:#f4f2ec;--red:#c8321e;--code:#141414;--codefg:#ebe8e1}
+@media (prefers-color-scheme:dark){:root{--paper:#161615;--ink:#ebe8e1;--dim:#9b978e;--line:#3a3935;--card:#1e1e1c;--red:#ff6a50;--code:#0c0c0b;--codefg:#ebe8e1}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--paper);color:var(--ink);font:16px/1.55 ui-monospace,"DM Mono","SF Mono",Menlo,Consolas,monospace}
+.in{max-width:760px;margin:0 auto;padding:40px 16px 80px}
+.kick{letter-spacing:.3em;font-size:12px;color:var(--dim);margin:0}
+h1{font:800 clamp(28px,6vw,44px)/1.05 ui-sans-serif,system-ui,"Archivo",sans-serif;letter-spacing:-.02em;margin:10px 0 12px}
+h1 b{color:var(--red)}
+.lede{color:var(--dim);max-width:60ch}
+.map{margin:28px 0;border:1px solid var(--line);background:var(--card);padding:18px}
+.map svg{width:100%;height:auto;display:block}
+.map text{font-family:inherit;fill:var(--ink)}
+.map .d{fill:var(--dim)}
+.map rect.box{fill:none;stroke:var(--ink);stroke-width:1.5}
+.map line,.map path{stroke:var(--ink);stroke-width:1.5;fill:none}
+.map .dash{stroke-dasharray:5 5;stroke:var(--red)}
+.step{display:grid;grid-template-columns:56px 1fr;gap:14px;border:1px solid var(--line);background:var(--card);padding:18px;margin:14px 0}
+.n{font:800 34px/1 ui-sans-serif,system-ui,sans-serif;color:var(--red)}
+.step h2{font:700 15px/1.3 ui-monospace,monospace;letter-spacing:.14em;margin:2px 0 6px}
+.step p{margin:6px 0;color:var(--dim)}
+.step p b{color:var(--ink);font-weight:600}
+pre{margin:10px 0;background:var(--code);color:var(--codefg);padding:12px 14px;overflow:auto;font:14px/1.5 inherit;white-space:pre-wrap;word-break:break-all}
+.btn{display:inline-block;background:var(--ink);color:var(--paper);text-decoration:none;padding:10px 16px;letter-spacing:.18em;font-size:13px;margin-top:6px}
+.ph{border:1px solid var(--ink);display:inline-block;padding:8px 12px;margin:8px 0;background:var(--paper);color:var(--ink)}
+.ph small{display:block;color:var(--dim);letter-spacing:.14em;font-size:11px}
+h3.sec{letter-spacing:.3em;font-size:12px;color:var(--dim);margin:44px 0 6px;font-weight:500}
+ul{margin:6px 0 6px 18px;padding:0;color:var(--dim)}
+li{margin:4px 0}
+li b{color:var(--ink);font-weight:600}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+@media(max-width:560px){.two{grid-template-columns:1fr}.step{grid-template-columns:1fr}.n{font-size:28px}}
+.note{border-left:3px solid var(--red);padding:2px 0 2px 12px;color:var(--dim);margin:14px 0}
+footer{margin-top:50px;color:var(--dim);font-size:13px}
+</style>
+</head>
+<body>
+<div class="in">
+<p class="kick">CALM LAUNCHER</p>
+<h1><b>YOUR PC</b> AS THE AI</h1>
+<p class="lede">Optional. Calm works on its own. A computer you own gives you a bigger model for the held digest, ASK, circle-to-search answers and reading web links. About fifteen minutes, once. Nothing goes to us or to any cloud: your phone talks straight to your PC, and if the PC is off the phone quietly does it by itself.</p>
+
+<div class="map" aria-label="How the phone reaches your PC">
+<svg viewBox="0 0 700 190" role="img">
+  <rect class="box" x="10" y="45" width="170" height="100"/>
+  <text x="95" y="82" text-anchor="middle" font-size="15" font-weight="700">PHONE</text>
+  <text x="95" y="104" text-anchor="middle" font-size="12" class="d">Calm Launcher</text>
+  <text x="95" y="124" text-anchor="middle" font-size="12" class="d">+ Tailscale app</text>
+
+  <line x1="180" y1="95" x2="300" y2="95" class="dash"/>
+  <text x="240" y="82" text-anchor="middle" font-size="11" class="d">private link</text>
+  <text x="240" y="118" text-anchor="middle" font-size="11" class="d">100.x.x.x : 8097</text>
+
+  <rect class="box" x="300" y="20" width="390" height="150"/>
+  <text x="320" y="46" font-size="15" font-weight="700">YOUR PC</text>
+  <rect class="box" x="320" y="62" width="165" height="42"/>
+  <text x="402" y="88" text-anchor="middle" font-size="12">notreal-server.py</text>
+  <rect class="box" x="320" y="116" width="165" height="42"/>
+  <text x="402" y="142" text-anchor="middle" font-size="12">Ollama (the model)</text>
+  <path d="M402 104 V116"/>
+  <rect class="box" x="510" y="62" width="165" height="96"/>
+  <text x="592" y="104" text-anchor="middle" font-size="12">Tailscale</text>
+  <text x="592" y="124" text-anchor="middle" font-size="11" class="d">same account as phone</text>
+</svg>
+</div>
+
+<div class="step"><div class="n">1</div><div>
+<h2>TAILSCALE ON BOTH</h2>
+<p>Install <b>Tailscale</b> (free) on the PC and on the phone from <b>tailscale.com/download</b> and sign in to the <b>same account</b> on both. It gives each device a private address that starts with <b>100.</b> and works from anywhere. Nothing needs opening on your router.</p>
+<p>Check: the Tailscale app on the phone shows <b>Connected</b>.</p>
+</div></div>
+
+<div class="step"><div class="n">2</div><div>
+<h2>OLLAMA ON THE PC</h2>
+<p>Install <b>Ollama</b> from <b>ollama.com</b> (Windows, Mac or Linux). It runs the language model. You do not need to download a model by hand: the next step picks one.</p>
+</div></div>
+
+<div class="step"><div class="n">3</div><div>
+<h2>THE NOTREAL SERVER</h2>
+<p>Download the file (Python 3.8 or newer is the only requirement, no packages):</p>
+<a class="btn" href="notreal-server.py" download>DOWNLOAD notreal-server.py</a>
+<p>Open a terminal in the folder where it landed and run it once:</p>
+<pre>python3 notreal-server.py --install</pre>
+<p>It picks a model (a small one of about 3 GB if you have none), starts itself every time you log in, and listens on your Tailscale address, port <b>8097</b>. On Windows use <b>python</b> instead of <b>python3</b>.</p>
+<p>To run it in the window instead, without installing: <b>python3 notreal-server.py</b>. To remove it later:</p>
+<pre>python3 notreal-server.py --uninstall</pre>
+</div></div>
+
+<div class="step"><div class="n">4</div><div>
+<h2>TELL THE PHONE</h2>
+<p>Find the PC's Tailscale address: the <b>100.x.x.x</b> number in the Tailscale app on the PC, or in a terminal there:</p>
+<pre>tailscale ip -4</pre>
+<p>In Calm: <b>Settings, SERVERS AND ACCOUNTS</b>. Type it in <b>YOUR PC / AI SERVER</b>, no port, and tap <b>TEST PC</b>.</p>
+<span class="ph"><small>THE PHONE SHOULD SAY</small>PC ANSWERS.</span>
+<p>The setup plan in the launcher ticks <b>CONNECT YOUR OWN PC AS THE AI</b> by itself.</p>
+</div></div>
+
+<h3 class="sec">WHAT YOU GET</h3>
+<div class="two">
+<div class="step" style="display:block;margin:0"><h2>THIS SERVER DOES</h2><ul><li>Summaries and the held digest</li><li>ASK and search-bar answers</li><li>The circle assistant</li><li>Reading a pasted web link</li></ul></div>
+<div class="step" style="display:block;margin:0"><h2>THE PHONE DOES ITSELF</h2><ul><li>Voice typing</li><li>Photo enhance and pictures</li><li>Web search</li><li>Hub checks</li></ul><p>These answer "not enabled" on this simple server, and the phone either does them on its own or leaves them off.</p></div>
+</div>
+
+<h3 class="sec">ALREADY RUN YOUR OWN AI?</h3>
+<p class="lede">Use any OpenAI-compatible server (Ollama, LM Studio, llama.cpp, vLLM) instead. In <b>SERVERS AND ACCOUNTS</b> tap <b>ADVANCED</b>, type its full address with the port in <b>AI SERVER ADDRESS</b> (for example <b>http://192.168.1.20:11434</b>) and the model name in <b>AI MODEL NAME</b>, then tap <b>TEST AI</b>.</p>
+
+<h3 class="sec">IF IT SAYS "NO ANSWER FROM THE PC"</h3>
+<ul>
+<li><b>The PC is on and awake.</b> A sleeping PC does not answer.</li>
+<li><b>Tailscale shows connected</b> on both the phone and the PC.</li>
+<li><b>The address</b> is the PC's 100.x.x.x number, with no port.</li>
+<li><b>The server is running.</b> On the PC open <b>http://127.0.0.1:8097/health</b> in a browser: it should answer. If not, run <b>python3 notreal-server.py</b> in a terminal and read what it prints.</li>
+<li><b>The firewall</b> on the PC allows port 8097 from Tailscale.</li>
+</ul>
+<p class="note">Still stuck? In Calm's setup plan, tap <b>COPY SETUP BRIEF</b> and paste it into any AI assistant for help. The brief holds your answers, the plan and your phone model. No passwords, keys or messages.</p>
+
+<footer>Calm Launcher · this page is optional reading, the apps work without it.</footer>
+</div>
+</body>
+</html>
